@@ -68,7 +68,7 @@ classes <- bind_rows(list(d_2019, d_2018, d_2017, d_2016, d_2015), .id = "year")
 **Prompt:** Write a function called `big_classes()` whose first argument `x` requires a tibble, formatted like `classes`. It should return a tibble with the 5 highest enrollment classes in `x`. Once everyone in your group has that working, add a function argument called `my_year` which allows the user to pick a year for which she wants to know the biggest 5 courses.
 
 ```{r}
-big_classes <- function(x, my_year){
+big_classes <- function(x = classes, my_year = 2015){
   stopifnot(is.numeric(my_year))
   stopifnot(is.tibble(x))
 newx <-  x %>%
@@ -80,7 +80,7 @@ newx <-  x %>%
 }
 
 
-big_classes(classes, 2015)
+big_classes(my_year = 2016)
 ```
 
 
@@ -96,8 +96,13 @@ big_classes(classes, 2015)
 * You now have a tibble with two columns: `year` and `q_enrollment`. Add another column called `mean_25_75` which is the average of the 25th and 75th percentiles. (You should look at `?quantile` to determine which elements in the list these are.) 
 
 ```{r}
-classes %>%
-  tibble(q_enrollment = mutate(map()))
+s3 <- classes %>%
+  group_by(year) %>%
+  summarize(q_enrollment = list(quantile(u_grad)))
+
+s3$q_enrollment[1][1]
+  
+tibble(q_enrollment = mutate(map(quantile)))
 
 ```
 
