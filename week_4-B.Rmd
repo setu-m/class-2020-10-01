@@ -1,5 +1,6 @@
 ---
 title: "Week 4, Day 2"
+uthor: "Setu"
 output: html_document
 ---
 
@@ -49,12 +50,38 @@ Let's continue working with the same enrollment data as Tuesday.  Recall the [of
 
 **Prompt:** Create a tibble named `classes` which includes the data from all five years in a "tidy" format. In addition to the variables produced by `read_enrollemnt()`, your tibble should include a variable named `year`.
 
+```{r}
+d_2019 <- read_enrollment("raw_data/class_enrollment_summary_by_term_12.20.19.xlsx")
+d_2018 <- read_enrollment("raw_data/class_enrollment_summary_by_term_10.24.18.xlsx", 2)
+d_2017 <- read_enrollment("raw_data/class_enrollment_summary_by_term_10.20.17.xlsx")
+d_2016 <- read_enrollment("raw_data/class_enrollment_summary_by_term_fall_2016.xlsx", 0)
+d_2015 <- read_enrollment("raw_data/class_enrollment_summary_by_term_fall_2015.xlsx")
+
+classes <- bind_rows(list(d_2019, d_2018, d_2017, d_2016, d_2015), .id = "year") %>%
+  mutate(year = as.numeric(year) + 2014)
+
+```
 
 
 ### Scene 2
 
 **Prompt:** Write a function called `big_classes()` whose first argument `x` requires a tibble, formatted like `classes`. It should return a tibble with the 5 highest enrollment classes in `x`. Once everyone in your group has that working, add a function argument called `my_year` which allows the user to pick a year for which she wants to know the biggest 5 courses.
 
+```{r}
+big_classes <- function(x, my_year){
+  stopifnot(is.numeric(my_year))
+  stopifnot(is.tibble(x))
+newx <-  x %>%
+    filter(year == my_year) %>%
+    arrange(desc(u_grad)) %>%
+    slice(1:5)
+  return(newx)
+  
+}
+
+
+big_classes(classes, 2015)
+```
 
 
 
@@ -68,6 +95,11 @@ Let's continue working with the same enrollment data as Tuesday.  Recall the [of
 
 * You now have a tibble with two columns: `year` and `q_enrollment`. Add another column called `mean_25_75` which is the average of the 25th and 75th percentiles. (You should look at `?quantile` to determine which elements in the list these are.) 
 
+```{r}
+classes %>%
+  tibble(q_enrollment = mutate(map()))
+
+```
 
 
 
